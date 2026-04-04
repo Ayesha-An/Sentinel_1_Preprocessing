@@ -81,6 +81,35 @@ def subset_to_aoi(product, wkt):
     return GPF.createProduct("Subset", params, product)
 
 
+def speckle_filter(product, filter_type="Lee Sigma"):
+    """
+    Apply speckle filtering to reduce noise while preserving edges.
+
+    Args:
+        product: SNAP Product object
+        filter_type (str): Filter type - "Lee Sigma", "Refined Lee", or "Gamma Map"
+
+    Returns:
+        SNAP Product with speckle filtering applied
+    """
+    print(f"    - Speckle filtering ({filter_type})")
+
+    params = HashMap()
+    params.put("filter", filter_type)
+    params.put("filterSizeX", 5)
+    params.put("filterSizeY", 5)
+    params.put("dampingFactor", 2)
+    params.put("estimateENL", True)
+    params.put("enl", 1.0)
+    params.put("numLooksStr", "1")
+    params.put("windowSize", "7x7")
+    params.put("targetWindowSizeStr", "3x3")
+    params.put("sigmaStr", "0.9")
+    params.put("anSize", "50")
+
+    return GPF.createProduct("Speckle-Filter", params, product)
+
+
 def terrain_correction(product, target_crs=None):
     """
     Terrain correction with map projection to UTM 33N.
@@ -115,8 +144,9 @@ def process_grd(product, aoi_wkt):
     1. Orbit correction
     2. Thermal noise removal
     3. Calibration to Sigma0
-    4. Subset to AOI
+    4. Speckle filtering (Lee Sigma)
     5. Terrain correction to UTM 33N
+    6. Subset to AOI
 
     Args:
         product: SNAP Product object
@@ -130,6 +160,7 @@ def process_grd(product, aoi_wkt):
     product = apply_orbit_file(product)
     product = thermal_noise_removal(product)
     product = calibration(product)
+    product = speckle_filter(product)
     product = terrain_correction(product)
     product = subset_to_aoi(product, aoi_wkt)
 
