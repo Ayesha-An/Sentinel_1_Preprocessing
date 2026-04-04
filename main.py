@@ -1,7 +1,5 @@
 """
-Sentinel-1 SAR Preprocessing Pipeline - Main Script
-====================================================
-Processes Sentinel-1 GRD and SLC products with automatic type detection.
+Processes Sentinel-1 GRD products.
 
 This script orchestrates the preprocessing workflow by using modular components:
 - config.py: Configuration and constants
@@ -10,7 +8,7 @@ This script orchestrates the preprocessing workflow by using modular components:
 
 Author: Ayesha Anwar
 """
-from pathlib import Path
+#from pathlib import Path
 
 # Import custom modules
 import config
@@ -43,8 +41,7 @@ def process_sentinel1_file(zip_path, aoi_wkt, output_dir):
         # Process based on product type
         if "GRD" in product_type:
             product = processors.process_grd(product, aoi_wkt)
-        elif "SLC" in product_type:
-            product = processors.process_slc(product, aoi_wkt)
+            
         else:
             raise ValueError(f"Unknown product type: {product_type}")
 
