@@ -61,26 +61,6 @@ def calibration(product):
     return GPF.createProduct("Calibration", params, product)
 
 
-def subset_to_aoi(product, wkt):
-    """
-    Subset product to Area of Interest.
-
-    Args:
-        product: SNAP Product object
-        wkt (str): WKT geometry string
-
-    Returns:
-        SNAP Product subset to AOI
-    """
-    print("    - Subset to AOI")
-
-    params = HashMap()
-    params.put("geoRegion", wkt)
-    params.put("copyMetadata", True)
-
-    return GPF.createProduct("Subset", params, product)
-
-
 def speckle_filter(product, filter_type="Lee Sigma"):
     """
     Apply speckle filtering to reduce noise while preserving edges.
@@ -134,6 +114,26 @@ def terrain_correction(product, target_crs=None):
     params.put("saveSelectedSourceBand", True)
 
     return GPF.createProduct("Terrain-Correction", params, product)
+
+
+def subset_to_aoi(product, wkt):
+    """
+    Subset product to Area of Interest.
+
+    Args:
+        product: SNAP Product object
+        wkt (str): WKT geometry string
+
+    Returns:
+        SNAP Product subset to AOI
+    """
+    print("    - Subset to AOI")
+
+    params = HashMap()
+    params.put("geoRegion", wkt)
+    params.put("copyMetadata", True)
+
+    return GPF.createProduct("Subset", params, product)
 
 
 def process_grd(product, aoi_wkt):
